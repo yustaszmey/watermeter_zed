@@ -1,5 +1,5 @@
 
-name: Check TC32 build environment
+name: Check official Telink TC32
 
 on:
   workflow_dispatch:
@@ -7,21 +7,18 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/telink-semi/telink-dev-tc32:1.0.0
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inspect build configuration
+      - name: Locate TC32 compiler
         shell: bash
         run: |
-          echo "=== Makefile toolchain ==="
-          grep -nE 'COMPILE_PREFIX|tc32|SDK|TARGET' makefile || true
-          echo "=== SDK directories ==="
-          ls -la tl_zigbee_sdk
-          echo "=== Available compiler ==="
+          echo "=== Compiler ==="
           command -v tc32-elf-gcc || true
-          command -v tc32-gcc || true
-          echo "=== Build tools ==="
-          make --version | head -n 1
-          python3 --version
+          find / -name tc32-elf-gcc -type f 2>/dev/null | head -20
+          echo "=== Version ==="
+          tc32-elf-gcc --version || true
