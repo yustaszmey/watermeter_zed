@@ -20,19 +20,28 @@ jobs:
         run: |
           /opt/toolchain/tc32/bin/tc32-elf-gcc --version
 
+
       - name: Build firmware
         shell: bash
         run: |
+          set -e
           export PATH="/opt/toolchain/tc32/bin:$PATH"
 
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-          # Создаем каталоги для объектных файлов
-          find src tl_zigbee_sdk -type d | while read -r dir; do
+          # Каталоги для файлов SDK
+          find tl_zigbee_sdk -type d | while read -r dir; do
+            mkdir -p "out/${dir#tl_zigbee_sdk/}"
+          done
+
+          # Каталоги для файлов проекта
+          find src -type d | while read -r dir; do
             mkdir -p "out/$dir"
           done
 
+          # Запуск компиляции
           make COMPILE_PREFIX=/opt/toolchain/tc32/bin/tc32
+
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
