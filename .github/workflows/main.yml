@@ -61,5 +61,6 @@ jobs:
         with:
           name: watermeter-firmware
           path: |
-            **/*.bin
+            bin/*.bin
+            bin/*.zigbee
           if-no-files-found: error
