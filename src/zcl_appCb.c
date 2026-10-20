@@ -180,7 +180,7 @@ static void app_zclWriteReqCmd(uint8_t endPoint, uint16_t clusterId, zclWriteCmd
         for(uint8_t i = 0; i < numAttr; i++) {
             //printf("(%d) attrID: 0x%x\r\n", i, attr->attrID);
             if (attr[i].attrID == ZCL_ATTRID_CUSTOM_HOT_WATER_PRESET && attr[i].dataType == ZCL_DATA_TYPE_UINT32) {
-                water_value = BUILD_U32(attr->attrData[0], attr->attrData[1], attr->attrData[2], attr->attrData[3]);
+                water_value = BUILD_U32(attr[i].attrData[0], attr[i].attrData[1], attr[i].attrData[2], attr[i].attrData[3]);
                 water_value /= watermeter_config.liters_per_pulse;
                 water_value *= watermeter_config.liters_per_pulse;
 
@@ -195,7 +195,7 @@ static void app_zclWriteReqCmd(uint8_t endPoint, uint16_t clusterId, zclWriteCmd
 //                return;
             } else if (attr[i].attrID == ZCL_ATTRID_CUSTOM_COLD_WATER_PRESET && attr[i].dataType == ZCL_DATA_TYPE_UINT32) {
 
-                water_value = BUILD_U32(attr->attrData[0], attr->attrData[1], attr->attrData[2], attr->attrData[3]);
+                water_value = BUILD_U32(attr[i].attrData[0], attr[i].attrData[1], attr[i].attrData[2], attr[i].attrData[3]);
                 water_value /= watermeter_config.liters_per_pulse;
                 water_value *= watermeter_config.liters_per_pulse;
 
@@ -210,11 +210,9 @@ static void app_zclWriteReqCmd(uint8_t endPoint, uint16_t clusterId, zclWriteCmd
 //                return;
             } else if (attr[i].attrID == ZCL_ATTRID_CUSTOM_WATER_STEP_PRESET && attr[i].dataType == ZCL_DATA_TYPE_UINT16) {
 
-                uint16_t water_step = BUILD_U16(attr->attrData[0], attr->attrData[1]);
+                uint16_t water_step = BUILD_U16(attr[i].attrData[0], attr[i].attrData[1]);
 
-                water_step /= 10;
-                water_step *= 10;
-                if (water_step == 0) water_step = 1;
+                if (water_step < 1) water_step = 1;
                 if (water_step > 100) water_step = 100;
 
                 watermeter_config.liters_per_pulse = water_step;
