@@ -1,0 +1,27 @@
+
+name: Check TC32 build environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Inspect build configuration
+        shell: bash
+        run: |
+          echo "=== Makefile toolchain ==="
+          grep -nE 'COMPILE_PREFIX|tc32|SDK|TARGET' makefile || true
+          echo "=== SDK directories ==="
+          ls -la tl_zigbee_sdk
+          echo "=== Available compiler ==="
+          command -v tc32-elf-gcc || true
+          command -v tc32-gcc || true
+          echo "=== Build tools ==="
+          make --version | head -n 1
+          python3 --version
