@@ -51,6 +51,8 @@ jobs:
             mkdir -p "out/$dir"
           done
 
+          rm -f bin/*.bin bin/*.zigbee
+
           # Сборка прошивки
           make COMPILE_PREFIX=/opt/toolchain/tc32/bin/tc32
 
