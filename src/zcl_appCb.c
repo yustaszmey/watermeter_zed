@@ -193,8 +193,6 @@ static void app_zclWriteReqCmd(uint8_t endPoint, uint16_t clusterId, zclWriteCmd
             } else if (attr[i].attrID == ZCL_ATTRID_CUSTOM_COLD_WATER_PRESET && attr[i].dataType == ZCL_DATA_TYPE_UINT32) {
 
                 water_value = BUILD_U32(attr[i].attrData[0], attr[i].attrData[1], attr[i].attrData[2], attr[i].attrData[3]);
-                water_value /= watermeter_config.liters_per_pulse;
-                water_value *= watermeter_config.liters_per_pulse;
 
                 watermeter_config.counter_cold_water = check_counter_overflow(water_value);
                 zcl_setAttrVal(WATERMETER_ENDPOINT3, ZCL_CLUSTER_SE_METERING, ZCL_ATTRID_CUSTOM_COLD_WATER_PRESET, (uint8_t*)&watermeter_config.counter_cold_water);
